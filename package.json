@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "basic rest api server for apex app",
   "main": "src/index.js",
-   "scripts": {
+  "scripts": {
     "build": "babel ./src --out-dir ./build",
     "start": "node ./build/index.js",
     "dev": "nodemon --exec npx babel-node src/index.js",
@@ -24,5 +24,8 @@
     "eslint-plugin-prettier": "^3.4.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
