@@ -1,0 +1,28 @@
+{
+  "name": "apexserverapi",
+  "version": "1.0.0",
+  "description": "basic rest api server for apex app",
+  "main": "src/index.js",
+   "scripts": {
+    "build": "babel ./src --out-dir ./build",
+    "start": "node ./build/index.js",
+    "dev": "nodemon --exec npx babel-node src/index.js",
+    "lint": "eslint ."
+  },
+  "author": "Jorge Ramos <jramos19@southtexascollege.edu>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.15",
+    "@babel/node": "^7.13.13",
+    "@babel/preset-env": "^7.13.15",
+    "@babel/runtime": "^7.13.10",
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1"
+  }
+}
