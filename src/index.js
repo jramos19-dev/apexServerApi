@@ -13,6 +13,9 @@ const port = parseInt(process.env.PORT, 10) || 3000
 
 const app = express()
 
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application
+
 // the middle ware goes before every request to the server
 app.use(morgan(process.env.MORGAN_LOG))
 

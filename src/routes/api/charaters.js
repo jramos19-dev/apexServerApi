@@ -1,30 +1,44 @@
 import { Router } from 'express'
 
 import * as characters from '../../helpers/db'
+import logger from '../../helpers/logger'
 
 const router = Router()
 
 router.get('/', (req, res) => {
-  res.json(characters.getAllCharacters())
+  res.send(characters.getAllCharacters())
 })
 
 router.post('/', (req, res) => {
-  res.json({ msg: 'create character' })
+  const { character: newCharacter } = req.body
+  if (newCharacter) {
+    const character = characters.addCharacter(newCharacter)
+    res.send(character)
+  } else {
+    res.status(400).send({ msg: 'bad status' })
+  }
 })
 
 router.get('/:name', (req, res) => {
   const { name } = req.params
-  res.json(characters.getCharacterByName(name))
+  const character = characters.getCharacterByName(name)
+  if (character) {
+    res.send(character)
+  } else {
+    logger.warn('character doesnt exist')
+    res.status(404).send({})
+  }
 })
 
-router.put('/:id', (req, res) => {
-  const { id } = req.params
-  res.json({ msg: `updating ${id} in characters` })
+router.put('/:name', (req, res) => {
+  const { name } = req.params
+  const { char: updatedChar } = req.body
+  res.json(characters.updateCharacter(name, updatedChar))
 })
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params
-  res.json({ msg: `delete ${id} from characters` })
+router.delete('/:name', (req, res) => {
+  const { name } = req.params
+  res.json(characters.deleteCharacter(name))
 })
 
 export default router
