@@ -1,12 +1,13 @@
 import { Router } from 'express'
 
-import * as characters from '../../helpers/db'
+import * as characters from '../../services/tipsChars'
 import logger from '../../helpers/logger'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-  res.send(characters.getAllCharacters())
+router.get('/', async (req, res) => {
+  const chars = await characters.getAllCharacters()
+  res.send(chars)
 })
 
 router.post('/', (req, res) => {
@@ -19,9 +20,9 @@ router.post('/', (req, res) => {
   }
 })
 
-router.get('/:name', (req, res) => {
-  const { name } = req.params
-  const character = characters.getCharacterByName(name)
+router.get('/:id', (req, res) => {
+  const { id } = req.params
+  const character = characters.getCharacterById(id)
   if (character) {
     res.send(character)
   } else {
@@ -30,15 +31,20 @@ router.get('/:name', (req, res) => {
   }
 })
 
-router.put('/:name', (req, res) => {
-  const { name } = req.params
-  const { char: updatedChar } = req.body
-  res.json(characters.updateCharacter(name, updatedChar))
+router.put('/:id', (req, res) => {
+  const { id } = req.params
+  const { character: updatedChar } = req.body
+  const response = characters.updateCharacter(id, updatedChar)
+
+  if (response.error) {
+    res.status(400)
+  }
+  res.send(response)
 })
 
-router.delete('/:name', (req, res) => {
-  const { name } = req.params
-  res.json(characters.deleteCharacter(name))
+router.delete('/:id', (req, res) => {
+  const { id } = req.params
+  res.json(characters.deleteCharacter(id))
 })
 
 export default router

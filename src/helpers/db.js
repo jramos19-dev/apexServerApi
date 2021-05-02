@@ -1,103 +1,38 @@
-import { nanoid } from 'nanoid'
-import joi from 'joi'
+import knex from 'knex'
 
-const tipsSchema = joi.object({
-  title: joi.string().required().min(3),
-  character: joi.string().required().min(4),
-  content: joi.string().required().min(15),
+// setting up actual db
+
+const db = knex({
+  client: 'sqlite3',
+  connection: {
+    filename: 'db.sqlite',
+  },
+  useNullAsDefault: true,
 })
 
-const charSchema = joi.object({
-  name: joi.string().required().min(3),
-  prescription: joi.string().required().min(4),
-})
+const createTables = async () => {
+  const tipsTableExists = await db.schema.hasTable('tips')
+  const charTableExists = await db.schema.hasTable('characters')
 
-let tips = []
-let characters = []
-
-const tip = {
-  id: 'randomid',
-  title: 'tip title',
-  character: 'tip character',
-  content: 'the content of the tip is the actual tip ',
-}
-
-const character = {
-  id: 1,
-  name: 'octane',
-  description: 'a brief description of the character',
-}
-
-tips.push(tip)
-characters.push(character)
-
-// tip functions
-export const getAllTips = () => tips
-
-export const getTipById = (id) => {
-  return tips.find((t) => t.id === id)
-}
-
-export const addTip = (t) => {
-  const { error } = tipsSchema.validate(t)
-  if (error) {
-    return error
+  if (!tipsTableExists) {
+    await db.schema.createTable('tips', (table) => {
+      table.increments('id').primary()
+      table.string('title')
+      table.string('character')
+      table.integer('charId')
+      table.string('content')
+      table.timestamps()
+    })
   }
-
-  const id = nanoid()
-  tips.push({ id, ...t })
-  return getTipById(id)
-}
-
-export const deleteTip = (id) => {
-  tips = tips.filter((t) => t.id !== id)
-  return tips
-}
-
-export const updateTip = (id, t) => {
-  let dbTip = getTipById(id)
-  if (dbTip) {
-    dbTip = { ...dbTip, ...t }
-    deleteTip(id)
-    addTip(dbTip)
-    return dbTip
+  if (!charTableExists) {
+    await db.schema.createTable('characters', (table) => {
+      table.increments('id').primary()
+      table.string('name')
+      table.string('description')
+      table.timestamps()
+    })
   }
-  return null
 }
 
-// character functions
-export const getAllCharacters = () => characters
-
-export const getCharacterByName = (name) => {
-  return characters.find((c) => c.name === name)
-}
-
-export const getCharacterById = (id) => {
-  return characters.find((c) => c.id === id)
-}
-
-export const addCharacter = (c) => {
-  const { error } = charSchema.validate(c)
-  if (error) {
-    return error
-  }
-  const id = nanoid()
-  characters.push({ id, ...c })
-  return getCharacterById(id)
-}
-
-export const deleteCharacter = (name) => {
-  characters = characters.filter((c) => c.name !== name)
-  return characters
-}
-
-export const updateCharacter = (name, c) => {
-  let dbChar = getCharacterByName(name)
-  if (dbChar) {
-    dbChar = { ...dbChar, ...c }
-    deleteCharacter(name)
-    addCharacter(dbChar)
-    return dbChar
-  }
-  return null
-}
+createTables()
+export default db

@@ -1,12 +1,13 @@
 import { Router } from 'express'
 
-import * as tips from '../../helpers/db'
+import * as tips from '../../services/tipsChars'
 import logger from '../../helpers/logger'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-  res.json(tips.getAllTips())
+router.get('/', async (req, res) => {
+  const tipps = await tips.getAllTips()
+  res.send(tipps)
 })
 
 router.post('/', (req, res) => {
