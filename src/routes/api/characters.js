@@ -10,10 +10,10 @@ router.get('/', async (req, res) => {
   res.send(chars)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
   const { character: newCharacter } = req.body
   if (newCharacter) {
-    const character = await characters.addCharacter(newCharacter)
+    const character = characters.addCharacter(newCharacter)
     res.send(character)
   } else {
     res.status(400).send({ msg: 'bad status' })
@@ -29,12 +29,13 @@ router.get('/:id', async (req, res) => {
     logger.warn('character doesnt exist')
     res.status(404).send({})
   }
+  return character
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', (req, res) => {
   const { id } = req.params
-  //const { character: updatedChar } = req.body
-  const response = await characters.updateCharacter(id, req.body)
+  const { character: updatedChar } = req.body
+  const response = characters.updateCharacter(id, updatedChar)
 
   if (response.error) {
     res.status(400)
@@ -42,9 +43,9 @@ router.put('/:id', async (req, res) => {
   res.send(response)
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', (req, res) => {
   const { id } = req.params
-  res.json(await characters.deleteCharacter(id))
+  res.json(characters.deleteCharacter(id))
 })
 
 export default router

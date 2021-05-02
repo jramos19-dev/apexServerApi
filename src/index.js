@@ -28,6 +28,6 @@ app.use(router)
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(port, () =>
+app.listen(3010, () =>
   logger.success(`application started at http://localhost:${process.env.PORT}`),
 )
