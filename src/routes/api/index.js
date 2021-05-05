@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import tips from './tips'
-import characters from './charaters'
+import characters from './characters'
 
 const router = Router()
 

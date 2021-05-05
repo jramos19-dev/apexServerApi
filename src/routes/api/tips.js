@@ -3,8 +3,11 @@ import { Router } from 'express'
 import * as tips from '../../services/tipsChars'
 import logger from '../../helpers/logger'
 
+import auth from '../../helpers/auth'
+
 const router = Router()
 
+router.use(auth.authenticate('local', { session: false }))
 router.get('/', async (req, res) => {
   const tipps = await tips.getAllTips()
   res.send(tipps)

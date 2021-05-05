@@ -6,6 +6,7 @@ const tipsSchema = joi.object({
   title: joi.string().min(3),
   character: joi.string().min(4),
   content: joi.string().min(3),
+  charId: joi.string(),
 })
 
 const charSchema = joi.object({
@@ -34,7 +35,11 @@ export const addTip = async (t) => {
     return { error: error.details[0].message }
   }
 
-  const id = await db('tips').insert(t)
+  const id = await db('tips').insert({
+    ...t,
+    created_at: new Date(),
+    updated_at: new Date(),
+  })
   const tip = await getTipById(id[0])
   return tip
 }
@@ -51,16 +56,16 @@ export const updateTip = async (id, t) => {
     logger.error(error)
     return { error: error.details[0].message }
   }
-  const tip = await getTipById(id)
+  const { title, character, content, charId } = t
+  let tip = await getTipById(id)
   if (tip) {
-    await db('tips').where({ id }).update({
-      title: t.title,
-      character: t.character,
-      content: t.content,
-      charId: t.charId,
-    })
+    // const { name, description } = character
+    // you were basically trying to update that entry
+    // with the data that was already in the db
+    await db('tips').where({ id }).update({ title, character, content, charId })
+    tip = await getTipById(id)
+    return tip
   }
-  return tip
 }
 
 // character functions
@@ -105,14 +110,14 @@ export const updateCharacter = async (id, c) => {
     logger.error(error)
     return { error: error.details[0].message }
   }
-  //this you need to use the c data instead of the
-  //name and description from the commented out line below
-  const { name, description} = c
+  // this you need to use the c data instead of the
+  // name and description from the commented out line below
+  const { name, description } = c
   let character = await getCharacterById(id)
   if (character) {
-    //const { name, description } = character
-    //you were basically trying to update that entry
-    //with the data that was already in the db
+    // const { name, description } = character
+    // you were basically trying to update that entry
+    // with the data that was already in the db
     await db('characters')
       .where({ id })
       .update({ name, description, updated_at: Date.now() })

@@ -8,6 +8,7 @@ import logger from './helpers/logger'
 // we use base ten
 import router from './routes'
 import { notFound, errorHandler } from './helpers/errors'
+import auth from './helpers/auth'
 
 const port = parseInt(process.env.PORT, 10) || 3000
 
@@ -22,12 +23,13 @@ app.use(morgan(process.env.MORGAN_LOG))
 app.use(cors({ origin: process.env.origin }))
 
 app.use(helmet())
+app.use(auth.initialize())
 
 app.use(router)
 
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(3010, () =>
+app.listen(port, () =>
   logger.success(`application started at http://localhost:${process.env.PORT}`),
 )
