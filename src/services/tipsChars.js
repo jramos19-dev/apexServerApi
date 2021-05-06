@@ -12,6 +12,7 @@ const tipsSchema = joi.object({
 const charSchema = joi.object({
   name: joi.string().min(3),
   description: joi.string().min(4),
+  url: joi.string(),
 })
 
 // tip functions

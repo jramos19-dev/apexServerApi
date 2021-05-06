@@ -23,9 +23,10 @@ router.post('/', (req, res) => {
   }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params
-  const tip = tips.getTipById(id)
+  logger.info(id)
+  const tip = await tips.getTipById(id)
   if (tip) {
     res.send(tip)
   } else {
@@ -38,6 +39,21 @@ router.put('/:id', (req, res) => {
   const { id } = req.params
   const { tip: updatedTip } = req.body
   res.json(tips.updateTip(id, updatedTip))
+})
+
+router.get('/tipsbycharid/:charid', async (req, res) => {
+  const { charid } = req.params
+  const tipps = await tips.getAllTips()
+  const filterTips = []
+  tipps.forEach((tip) => {
+    // check if tip.charid is equal to charid
+    // if yes, add to filterTips
+    if (tip.charId === parseInt(charid)) {
+      filterTips.push(tip)
+    }
+  })
+
+  res.send(filterTips)
 })
 
 router.delete('/:id', (req, res) => {

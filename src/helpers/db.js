@@ -29,6 +29,7 @@ const createTables = async () => {
       table.increments('id').primary()
       table.string('name')
       table.string('description')
+      table.string('url')
       table.timestamps()
     })
   }

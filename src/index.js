@@ -1,9 +1,13 @@
+import 'regenerator-runtime/runtime'
+import 'core-js/stable'
+
 import './helpers/dotenv'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import helmet from 'helmet'
 import logger from './helpers/logger'
+
 // you have to parse it and then the second param is the base
 // we use base ten
 import router from './routes'
