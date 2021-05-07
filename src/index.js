@@ -18,6 +18,11 @@ const port = parseInt(process.env.PORT, 10) || 3000
 
 const app = express()
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  next()
+})
+
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application
 
